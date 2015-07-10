@@ -1,3 +1,6 @@
+var maxGuess = 100;
+var secretNum = 100000;
+
 var DEBUG_MODE = true;
 var debug = function(msg) {
     if (DEBUG_MODE === true) {
@@ -5,8 +8,8 @@ var debug = function(msg) {
     }
 };
 
-
 $(document).ready(function(){
+
 
 	/*--- Display information modal box ---*/
 	$(".what").click(function(){
@@ -24,42 +27,90 @@ $(document).ready(function(){
   });
 
   $("#guessButton").click(function(){
+    var guessNum;
     var input = document.getElementById("userGuess");
-    var num = input.value;
-    debug("User guess: " + num);
-    /*if  ( ( +num % 1 !== 0 ) || ( num[0] === '0' ) ) {
-      alert('Please enter an integer greater than 0!');
+    var guessStr = input.value;
+    debug("User guess: " + guessStr);
+
+    if ( -1 !== (guessNum = validateGuess(guessStr)) ) {
+      giveFeedback(guessNum, secretNum);
+    }
+
+    input.value = '';
+  });
+
+  function validateGuess(num) {
+
+    var msg = "Please enter an integer between 1 and " + maxGuess;
+
+    if  ( ( +num % 1 !== 0 ) || ( num[0] === '0' ) || (num > maxGuess) ) {
+      alert(msg);
+      return -1;
     } else {
       endRange = parseInt(num, 10);
 
       if ( ( isNaN(endRange) ) || ( endRange <= 0 ) ) {
-        alert('Please enter an integer greater than 0!');
+        alert(msg);
+        return -1;
       }
     }
 
-    input.value = '';
-    */
+    return endRange;
 
-  });
+  }
+
+  function giveFeedback(guess, secretNum) {
+    var difference;
+    var feedback = '';
+
+    difference = Math.abs(secretNum - guess);
+    debug("Difference = " + difference);
+
+// For instance, you might decide that if
+//a user is 50 or further away from the
+//secret number, they are told they are
+//“Ice cold”, if they are between 30 and 50
+//they are “cold”, if they are between 20 and 30 they are warm,
+//between 10 and 20 hot,
+//and between 1 and 10 “very hot”.
+    if (difference >= 50) {
+      feedback = 'Ice Cold';
+    } else if ( (difference >= 30 ) && (difference < 50 ) ) {
+      feedback = 'Cold';
+    } else if ( (difference >= 20 ) && (difference < 30 ) ) {
+      feedback = 'Warm';
+    } else if ( (difference >= 10 ) && (difference < 20 ) ) {
+      feedback = 'Hot';
+    } else if ( (difference >= 1 ) && (difference < 10 ) ) {
+      feedback = 'Very Hot';
+    } else {
+      feedback = 'CORRECT!!!!!';
+    }
+
+    debug("You are " + feedback);
+    $('#feedback').text("You are " + feedback);
+
+  }
+
+  function generateRandomNumber(upperRange) {
+    var randomNum = Math.floor((Math.random() * upperRange) + 1);
+
+    debug("Random number: upperRange: " + upperRange + " Random Num: " + randomNum);
+
+    return randomNum;
+  }
+
+  function newGame() {
+
+    //var secretNum;
+    debug("New game!");
+
+    secretNum = generateRandomNumber(maxGuess);
+
+    debug("Secret number: " + secretNum);
+
+
+  }
 
 });
-
-function generateRandomNumber(upperRange) {
-  var randomNum = Math.floor((Math.random() * upperRange) + 1);
-
-  debug("Random number: upperRange: " + upperRange + " Random Num: " + randomNum);
-
-  return randomNum;
-}
-
-function newGame() {
-  var secretNum;
-
-  debug("New game!");
-
-  secretNum = generateRandomNumber(100);
-
-
-}
-
 
