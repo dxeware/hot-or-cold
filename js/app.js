@@ -84,11 +84,11 @@ $(document).ready(function(){
     } else if ( (difference >= 1 ) && (difference < 10 ) ) {
       feedback = 'Very Hot';
     } else {
-      feedback = 'CORRECT!!!!!';
+      feedback = 'CORRECT!<br>Press +NEW GAME to play again!';
     }
 
     debug("You are " + feedback);
-    $('#feedback').text("You are " + feedback);
+    $('#feedback').html("You are " + feedback);
 
   }
 
@@ -106,6 +106,7 @@ $(document).ready(function(){
     debug("New game!");
 
     secretNum = generateRandomNumber(maxGuess);
+    $('#secret').text(secretNum);
 
     debug("Secret number: " + secretNum);
 
