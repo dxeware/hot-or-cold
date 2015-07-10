@@ -25,23 +25,30 @@ $(document).ready(function(){
 		$(".overlay").fadeOut(1000);
 	});
 
+  // Start new game when +NEW GAME clicked
   $(".new").click(function(){
     newGame();
   });
 
+  // Validate guess and give feedback when Guess button clicked
   $("#guessButton").click(function(){
+
     var guessNum;
     var input = document.getElementById("userGuess");
     var guessStr = input.value;
     debug("User guess: " + guessStr);
 
+    // Validate guess and if legal, give user feedback
     if ( -1 !== (guessNum = validateGuess(guessStr)) ) {
       guessCount++;
       $('span#count').text(guessCount);
       giveFeedback(guessNum, secretNum);
+
+      // Save recent guess
       recentGuess = guessNum;
     }
 
+    // Clear guess input
     input.value = '';
   });
 
@@ -68,7 +75,7 @@ $(document).ready(function(){
   }
 
   function giveFeedback(guess, secretNum) {
-    var newDiff, origDiff;
+    var newDiff, recentDiff;
     var feedback = '';
 
     newDiff = Math.abs(secretNum - guess);
@@ -89,12 +96,13 @@ $(document).ready(function(){
       } else {
         feedback = 'Ice Cold';
       }
-    } else {
-      origDiff = Math.abs(secretNum - recentGuess);
+    } else { // This is for guesses that aren't the first
+      recentDiff = Math.abs(secretNum - recentGuess);
+      debug("Recent Diff = " + recentDiff);
 
-      if (origDiff === newDiff) {
-        feedback = 'JUST AS COLD/WARM!';
-      } else if (origDiff > newDiff) {
+      if (recentDiff === newDiff) {
+        feedback = 'JUST as COLD/WARM :)';
+      } else if (recentDiff > newDiff) {
         feedback = 'WARMER!';
       } else {
         feedback = 'COLDER!';
@@ -107,6 +115,7 @@ $(document).ready(function(){
   }
 
   function generateRandomNumber(upperRange) {
+
     var randomNum = Math.floor((Math.random() * upperRange) + 1);
 
     debug("Random number: upperRange: " + upperRange + " Random Num: " + randomNum);
@@ -120,9 +129,13 @@ $(document).ready(function(){
     guessCount = 0;
     recentGuess = 0;
 
+    // Reset feedback text
     $('#feedback').text('Make your Guess!');
 
+    // Reset guess count display
     $('span#count').text(guessCount);
+
+    // Empty the guess list
     $('ul#guessList').empty();
 
     secretNum = generateRandomNumber(maxGuess);
