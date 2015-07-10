@@ -1,6 +1,6 @@
 var maxGuess = 100;
 var secretNum = 100000;
-var guessCount;
+var guessCount, recentGuess;
 
 var DEBUG_MODE = true;
 var debug = function(msg) {
@@ -39,6 +39,7 @@ $(document).ready(function(){
       guessCount++;
       $('span#count').text(guessCount);
       giveFeedback(guessNum, secretNum);
+      recentGuess = guessNum;
     }
 
     input.value = '';
@@ -61,36 +62,43 @@ $(document).ready(function(){
     }
 
     $( 'ul#guessList').append('<li>' + num + '</li>');
+
     return num;
 
   }
 
   function giveFeedback(guess, secretNum) {
-    var difference;
+    var newDiff, origDiff;
     var feedback = '';
 
-    difference = Math.abs(secretNum - guess);
-    debug("Difference = " + difference);
+    newDiff = Math.abs(secretNum - guess);
+    debug("New Diff = " + newDiff);
 
-// For instance, you might decide that if
-//a user is 50 or further away from the
-//secret number, they are told they are
-//“Ice cold”, if they are between 30 and 50
-//they are “cold”, if they are between 20 and 30 they are warm,
-//between 10 and 20 hot,
-//and between 1 and 10 “very hot”.
-    if (difference >= 50) {
-      feedback = 'Ice Cold';
-    } else if ( (difference >= 30 ) && (difference < 50 ) ) {
-      feedback = 'Cold';
-    } else if ( (difference >= 20 ) && (difference < 30 ) ) {
-      feedback = 'Warm';
-    } else if ( (difference >= 10 ) && (difference < 20 ) ) {
-      feedback = 'Hot';
-    } else if ( (difference >= 1 ) && (difference < 10 ) ) {
-      feedback = 'Very Hot';
-    } else {
+    if (newDiff === 0) {
       feedback = 'CORRECT!<br>Press +NEW GAME to play again!';
+    } else if (recentGuess === 0) { // This is the first guess
+
+      if (newDiff >= 50) {
+        feedback = 'Ice Cold';
+      } else if ( (newDiff >= 30 ) && (newDiff < 50 ) ) {
+        feedback = 'Cold';
+      } else if ( (newDiff >= 20 ) && (newDiff < 30 ) ) {
+        feedback = 'Warm';
+      } else if ( (newDiff >= 10 ) && (newDiff < 20 ) ) {
+        feedback = 'Hot';
+      } else if ( (newDiff >= 1 ) && (newDiff < 10 ) ) {
+        feedback = 'Very Hot';
+      }
+    } else {
+      origDiff = Math.abs(secretNum - recentGuess);
+
+      if (origDiff === newDiff) {
+        feedback = 'JUST AS COLD/WARM!';
+      } else if (origDiff > newDiff) {
+        feedback = 'WARMER!';
+      } else {
+        feedback = 'COLDER!';
+      }
     }
 
     debug("You are " + feedback);
@@ -109,7 +117,11 @@ $(document).ready(function(){
   function newGame() {
 
     debug("New game!");
-    guessCount=0;
+    guessCount = 0;
+    recentGuess = 0;
+
+    $('#feedback').text('Make your Guess!');
+
     $('span#count').text(guessCount);
     $('ul#guessList').empty();
 
