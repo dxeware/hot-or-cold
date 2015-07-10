@@ -11,6 +11,8 @@ var debug = function(msg) {
 
 $(document).ready(function(){
 
+  // Default to new game when page loads
+  newGame();
 
 	/*--- Display information modal box ---*/
 	$(".what").click(function(){
@@ -50,15 +52,16 @@ $(document).ready(function(){
       alert(msg);
       return -1;
     } else {
-      endRange = parseInt(num, 10);
+      num = parseInt(num, 10);
 
-      if ( ( isNaN(endRange) ) || ( endRange <= 0 ) ) {
+      if ( ( isNaN(num) ) || ( num <= 0 ) ) {
         alert(msg);
         return -1;
       }
     }
 
-    return endRange;
+    $( 'ul#guessList').append('<li>' + num + '</li>');
+    return num;
 
   }
 
@@ -108,12 +111,12 @@ $(document).ready(function(){
     debug("New game!");
     guessCount=0;
     $('span#count').text(guessCount);
+    $('ul#guessList').empty();
 
     secretNum = generateRandomNumber(maxGuess);
     $('#secret').text(secretNum);
 
     debug("Secret number: " + secretNum);
-
 
   }
 
