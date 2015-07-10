@@ -78,16 +78,16 @@ $(document).ready(function(){
       feedback = 'CORRECT!<br>Press +NEW GAME to play again!';
     } else if (recentGuess === 0) { // This is the first guess
 
-      if (newDiff >= 50) {
-        feedback = 'Ice Cold';
-      } else if ( (newDiff >= 30 ) && (newDiff < 50 ) ) {
-        feedback = 'Cold';
-      } else if ( (newDiff >= 20 ) && (newDiff < 30 ) ) {
-        feedback = 'Warm';
-      } else if ( (newDiff >= 10 ) && (newDiff < 20 ) ) {
-        feedback = 'Hot';
-      } else if ( (newDiff >= 1 ) && (newDiff < 10 ) ) {
+      if (newDiff < 10 ) {
         feedback = 'Very Hot';
+      } else if (newDiff < 20 ) {
+        feedback = 'Hot';
+      } else if (newDiff < 30 ) {
+        feedback = 'Warm';
+      } else if (newDiff < 50 ) {
+        feedback = 'Cold';
+      } else {
+        feedback = 'Ice Cold';
       }
     } else {
       origDiff = Math.abs(secretNum - recentGuess);
