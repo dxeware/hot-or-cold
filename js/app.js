@@ -1,5 +1,6 @@
 var maxGuess = 100;
 var secretNum = 100000;
+var guessCount;
 
 var DEBUG_MODE = true;
 var debug = function(msg) {
@@ -33,6 +34,8 @@ $(document).ready(function(){
     debug("User guess: " + guessStr);
 
     if ( -1 !== (guessNum = validateGuess(guessStr)) ) {
+      guessCount++;
+      $('span#count').text(guessCount);
       giveFeedback(guessNum, secretNum);
     }
 
@@ -102,8 +105,9 @@ $(document).ready(function(){
 
   function newGame() {
 
-    //var secretNum;
     debug("New game!");
+    guessCount=0;
+    $('span#count').text(guessCount);
 
     secretNum = generateRandomNumber(maxGuess);
     $('#secret').text(secretNum);
