@@ -1,15 +1,16 @@
-var maxGuess = 100;
-var secretNum = 100000;
-var guessCount, recentGuess;
-
-var DEBUG_MODE = true;
-var debug = function(msg) {
-    if (DEBUG_MODE === true) {
-        console.log("DEBUG:", msg);
-    }
-};
 
 $(document).ready(function(){
+
+  var maxGuess = 100;
+  var secretNum = 100000;
+  var guessCount, recentGuess;
+
+  var DEBUG_MODE = true;
+  var debug = function(msg) {
+      if (DEBUG_MODE === true) {
+          console.log("DEBUG:", msg);
+      }
+  };
 
   // Default to new game when page loads
   newGame();
